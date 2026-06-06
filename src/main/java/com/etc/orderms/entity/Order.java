@@ -25,7 +25,7 @@ public class Order {
 
     @Column(nullable = false)
     private BigDecimal amount;
-    
+
     @Column(nullable = false)
     private String encryptedCardNumber;
 
