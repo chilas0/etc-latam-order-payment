@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: order-ms
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/orderdb
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+server:
+  port: 8080
