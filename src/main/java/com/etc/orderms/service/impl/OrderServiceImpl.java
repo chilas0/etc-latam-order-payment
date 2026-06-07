@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Implementation of order business operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -20,6 +23,12 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final RsaService rsaService;
 
+    /**
+     * Creates an order and encrypts the card number before persistence.
+     *
+     * @param request order data
+     * @return
+     */
     @Override
     public OrderResponse createOrder(CreateOrderRequest request) {
 
@@ -40,6 +49,12 @@ public class OrderServiceImpl implements OrderService {
         return map(saved);
     }
 
+    /**
+     * Retrieves an order by id.
+     *
+     * @param id order identifier.
+     * @return
+     */
     @Override
     public OrderResponse getOrder(Long id) {
 
@@ -49,6 +64,12 @@ public class OrderServiceImpl implements OrderService {
         return map(order);
     }
 
+    /**
+     * Maps an Order entity to an OrderResponse DTO.
+     *
+     * @param order source entity
+     * @return mapped response object
+     */
     private OrderResponse map(Order order) {
 
         return OrderResponse.builder()

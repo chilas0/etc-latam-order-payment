@@ -6,6 +6,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Represents an order stored in the system.
+ */
 @Entity
 @Table(name = "orders")
 @Getter

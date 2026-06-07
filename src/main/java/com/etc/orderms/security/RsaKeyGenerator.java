@@ -8,6 +8,10 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+/**
+ * Generates an RSA key pair used for encryption
+ * and decryption of sensitive information.
+ */
 @Component
 public class RsaKeyGenerator {
 
@@ -29,10 +33,20 @@ public class RsaKeyGenerator {
         this.privateKey = keyPair.getPrivate();
     }
 
+    /**
+     * Returns the RSA public key.
+     *
+     * @return public key
+     */
     public PublicKey getPublicKey() {
         return publicKey;
     }
 
+    /**
+     * Returns the RSA private key.
+     *
+     * @return private key
+     */
     public PrivateKey getPrivateKey() {
         return privateKey;
     }

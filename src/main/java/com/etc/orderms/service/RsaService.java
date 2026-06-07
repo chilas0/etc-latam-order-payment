@@ -7,12 +7,21 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Cipher;
 import java.util.Base64;
 
+/**
+ * Provides RSA encryption and decryption operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class RsaService {
 
     private final RsaKeyGenerator keyGenerator;
 
+    /**
+     *Encrypts sensitive data using the RSA public key.
+     *
+     * @param value plain text value
+     * @return encrypted value encoded in Base64
+     */
     public String encrypt(String value) {
         try {
 
@@ -39,6 +48,12 @@ public class RsaService {
         }
     }
 
+    /**
+     * Decrypts RSA encrypted data using the private key.
+     *
+     * @param value encrypted Base64 value
+     * @return decrypted plain text
+     */
     public String decrypt(String value){
         try{
 

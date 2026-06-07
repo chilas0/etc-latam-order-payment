@@ -8,16 +8,28 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * Request payload used to create a new order.
+ */
 @Data
 public class CreateOrderRequest {
 
+    /**
+     * Product name.
+     */
     @NotBlank(message = "Product name is required")
     private String productName;
 
+    /**
+     * Order amount.
+     */
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
     private BigDecimal amount;
 
+    /**
+     * Credit card number.
+     */
     @NotBlank(message = "Card number is required")
     private String cardNumber;
 }

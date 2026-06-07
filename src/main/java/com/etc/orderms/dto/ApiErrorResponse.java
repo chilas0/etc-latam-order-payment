@@ -6,6 +6,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Standard API error response returned to clients
+ * when an exception occurs.
+ */
 @Data
 @Builder
 public class ApiErrorResponse {

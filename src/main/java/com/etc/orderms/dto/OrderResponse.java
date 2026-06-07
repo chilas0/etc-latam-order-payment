@@ -7,6 +7,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Response payload returned after order operations.
+ */
 @Data
 @Builder
 public class OrderResponse {
