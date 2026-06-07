@@ -26,7 +26,7 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String encryptedCardNumber;
 
     @Enumerated(EnumType.STRING)

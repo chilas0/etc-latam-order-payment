@@ -6,6 +6,7 @@ import com.etc.orderms.entity.Order;
 import com.etc.orderms.entity.OrderStatus;
 import com.etc.orderms.repository.OrderRepository;
 import com.etc.orderms.service.OrderService;
+import com.etc.orderms.service.RsaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,18 @@ import java.time.LocalDateTime;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final RsaService rsaService;
 
     @Override
     public OrderResponse createOrder(CreateOrderRequest request) {
 
+        String encrytedCardNumber =
+                rsaService.encrypt(request.getCardNumber());
+
         Order order = Order.builder()
                 .productName(request.getProductName())
                 .amount(request.getAmount())
-                .encryptedCardNumber(request.getCardNumber())
+                .encryptedCardNumber(encrytedCardNumber)
                 .status(OrderStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .build();
