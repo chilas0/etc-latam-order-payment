@@ -4,6 +4,7 @@ import com.etc.orderms.dto.CreateOrderRequest;
 import com.etc.orderms.dto.OrderResponse;
 import com.etc.orderms.entity.Order;
 import com.etc.orderms.entity.OrderStatus;
+import com.etc.orderms.exception.OrderNotFoundException;
 import com.etc.orderms.repository.OrderRepository;
 import com.etc.orderms.service.OrderService;
 import com.etc.orderms.service.RsaService;
@@ -22,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse createOrder(CreateOrderRequest request) {
 
+        System.out.println(request.getProductName());
         String encrytedCardNumber =
                 rsaService.encrypt(request.getCardNumber());
 
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() ->
-                    new RuntimeException("Order not found"));
+                    new OrderNotFoundException(id));
         return map(order);
     }
 
