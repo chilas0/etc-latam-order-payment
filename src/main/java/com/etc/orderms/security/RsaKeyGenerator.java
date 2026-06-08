@@ -1,12 +1,15 @@
 package com.etc.orderms.security;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
 
 /**
  * Generates an RSA key pair used for encryption
@@ -16,21 +19,40 @@ import java.security.PublicKey;
 public class RsaKeyGenerator {
 
     private PublicKey publicKey;
-    private PrivateKey privateKey;
 
+    /**
+     * Loads the RSA public key from the application resources.
+     *
+     * @throws Exception if the key cannot be loaded or parsed
+     */
     @PostConstruct
     public void init() throws Exception {
 
-        KeyPairGenerator generator =
-                KeyPairGenerator.getInstance("RSA");
+        ClassPathResource resource =
+                new ClassPathResource("keys/public.key");
 
-        generator.initialize(2048);
+        String key = new String(
+                resource.getInputStream().readAllBytes(),
+                StandardCharsets.UTF_8
+        );
 
-        KeyPair keyPair =
-                generator.generateKeyPair();
+        key = key
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
 
-        this.publicKey = keyPair.getPublic();
-        this.privateKey = keyPair.getPrivate();
+        byte[] decodedKey =
+                Base64.getDecoder().decode(key);
+
+        X509EncodedKeySpec keySpec =
+                new X509EncodedKeySpec(decodedKey);
+
+        KeyFactory keyFactory =
+                KeyFactory.getInstance("RSA");
+
+        this.publicKey =
+                keyFactory.generatePublic(keySpec);
+
     }
 
     /**
@@ -42,12 +64,5 @@ public class RsaKeyGenerator {
         return publicKey;
     }
 
-    /**
-     * Returns the RSA private key.
-     *
-     * @return private key
-     */
-    public PrivateKey getPrivateKey() {
-        return privateKey;
-    }
+
 }

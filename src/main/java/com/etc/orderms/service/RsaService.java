@@ -48,37 +48,4 @@ public class RsaService {
         }
     }
 
-    /**
-     * Decrypts RSA encrypted data using the private key.
-     *
-     * @param value encrypted Base64 value
-     * @return decrypted plain text
-     */
-    public String decrypt(String value){
-        try{
-
-            Cipher cipher =
-                    Cipher.getInstance("RSA");
-
-            cipher.init(
-                    Cipher.DECRYPT_MODE,
-                    keyGenerator.getPrivateKey()
-            );
-
-            byte[] decrypted =
-                    cipher.doFinal(
-                            Base64.getDecoder()
-                                    .decode(value)
-                    );
-
-            return new String(decrypted);
-
-        } catch (Exception ex) {
-
-            throw new RuntimeException(
-                    "Error decrypting data",
-                    ex
-            );
-        }
-    }
 }
