@@ -77,6 +77,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * Updates the status of an existing order.
+     *
+     * @param orderId order identifier
+     * @param status new order status
+     */
+    @Override
+    public void updateOrderStatus(
+            Long orderId,
+            OrderStatus status) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new OrderNotFoundException(orderId));
+
+        order.setStatus(status);
+
+        orderRepository.save(order);
+    }
+
+    /**
      * Maps an Order entity to an OrderResponse DTO.
      *
      * @param order source entity
