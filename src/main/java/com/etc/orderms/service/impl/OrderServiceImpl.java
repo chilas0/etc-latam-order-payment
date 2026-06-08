@@ -1,10 +1,12 @@
 package com.etc.orderms.service.impl;
 
 import com.etc.orderms.dto.CreateOrderRequest;
+import com.etc.orderms.dto.OrderPlacedEvent;
 import com.etc.orderms.dto.OrderResponse;
 import com.etc.orderms.entity.Order;
 import com.etc.orderms.entity.OrderStatus;
 import com.etc.orderms.exception.OrderNotFoundException;
+import com.etc.orderms.kafka.OrderEventPublisher;
 import com.etc.orderms.repository.OrderRepository;
 import com.etc.orderms.service.OrderService;
 import com.etc.orderms.service.RsaService;
@@ -22,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final RsaService rsaService;
-
+    private final OrderEventPublisher orderEventPublisher;
     /**
      * Creates an order and encrypts the card number before persistence.
      *
@@ -45,6 +47,16 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         Order saved = orderRepository.save(order);
+
+        OrderPlacedEvent event =
+                OrderPlacedEvent.builder()
+                        .orderId(saved.getId())
+                        .encryptedCardNumber(
+                                saved.getEncryptedCardNumber())
+                        .amount(saved.getAmount())
+                        .build();
+
+        orderEventPublisher.publishOrderPlaced(event);
 
         return map(saved);
     }
