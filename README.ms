@@ -1,5 +1,5 @@
 # Order Processing Microservices
-
+Spring Boot 3 + Apache Kafka + PostgreSQL + Docker
 ## Overview
 
 This project implements a distributed order processing system using a microservices architecture based on Spring Boot, Apache Kafka, PostgreSQL, Docker and Docker Compose.
@@ -16,6 +16,16 @@ Communication between services is performed asynchronously using Apache Kafka.
 Sensitive card information is protected using RSA encryption. OrderMS encrypts card data using a public key before publishing events, and PaymentMS decrypts the information using the corresponding private key.
 
 ---
+## Technology Stack
+* Java 21
+* Spring Boot 3
+* Apache Kafka
+* PostgreSQL 17
+* Spring Data JPA
+* Docker
+* Docker Compose
+* RSA Encryption
+* Maven
 
 # Architecture
 
@@ -115,26 +125,27 @@ Provides a graphical interface for PostgreSQL administration.
 
 ---
 
-# Repository Structure
+# Project Structure
 
 This solution is composed of two repositories.
 
 Clone both repositories into the same parent directory.
 
-Expected structure:
+The complete solution is expected to follow the structure below:
 
 ```text
-IdeaProjects
+ETC
 │
-├── etc-latam-order-payment
-│   ├── docker-compose.yml
+├── order-ms
 │   ├── Dockerfile
 │   ├── README.md
 │   └── src
 │
-└── etc-latam-payment-order
-    ├── Dockerfile
-    └── src
+├── payment-ms
+│   ├── Dockerfile
+│   └── src
+│
+├── docker-compose.yml
 ```
 
 ---
@@ -149,76 +160,26 @@ Required Software
 - Maven 3.9+
 - Docker Desktop
 - Git
-- IntelliJ IDEA Community Edition (recommended)
 
 Installation Links
 
-Java: Especificar
-https://www.oracle.com/java/technologies/downloads/
+Java:
 https://adoptium.net/es/temurin/releases?version=21
-Pasos
-Seleccione:
-Version: 21 (LTS)
-Operating System: Windows
-Architecture: x64
-Descargue el archivo .msi.
-Ejecútelo como administrador.
-Durante la instalación asegúrese de marcar:
-Add to PATH
-Set JAVA_HOME variable
-Finalice la instalación.
 
-```bash
-java -version
-```
-
-Maven: Especificar
+Maven:
 https://maven.apache.org/download.cgi
 
-
-```bash
-Binary zip archive
-apache-maven-3.9.x-bin.zip
-```
-2. Descomprimir
-3. Muevelo a C:\Program Files\Apache\Maven
-4. Configurar Variables de Entorno
-   Crear MAVEN_HOME
-   Posible valor C:\Herramientas\apache-maven-3.9.11
-   Agregar al PATH
-   %MAVEN_HOME%\bin
-5. Cerrar y abrir CMD
-
-Luego ejecutar:
-```bash
-mvn -version
-```
-Debe mostrar algo parecido a:
-```bash
-Apache Maven 3.9.11
-
-Java version: 21
-```
 Docker Desktop:
 https://www.docker.com/products/docker-desktop/
 
-Crea una cuenta 
-
-Git:
+Github:
 https://git-scm.com/download/win
-Crea una cuenta 
 
-IntelliJ IDEA Community:
-https://www.jetbrains.com/idea/download/
-
-instale 
-Seleccione Add "bin" folder to "PATH"
-.java
-.pom
-Intellij IDEA
-Verify installation:
+Gitbash
+https://git-scm.com/install/windows
 
 Postman:
+https://www.postman.com/downloads/
 
 ```bash
 java -version
@@ -230,27 +191,20 @@ git --version
 ---
 
 # Clone the Repositories
-
-Clone both repositories into the same parent directory:
-
-```bash
-mkdir IdeaProjects
-
-cd IdeaProjects
-
-git clone https://github.com/chilas0/etc-latam-order-payment.git
-
-git clone https://github.com/chilas0/etc-latam-payment-order.git
-```
-
-Example:
+* Create a folder somewhere named ETC
+* Clone both repositories into the same ETC directory:
+* Open a powershell command: git bash
 
 ```bash
-git clone https://github.com/your-user/etc-latam-order-payment.git
+cd ETC
 
-git clone https://github.com/your-user/etc-latam-payment-order.git
+git clone https://github.com/chilas0/order-ms.git
 ```
+* Move the docker-compose.yml file from order-ms to ETC
 
+```bash
+git clone https://github.com/chilas0/payment-ms.git
+```
 ---
 
 # Build the Applications
@@ -258,21 +212,22 @@ git clone https://github.com/your-user/etc-latam-payment-order.git
 Build OrderMS:
 
 ```bash
-cd etc-latam-order-payment
+cd order-ms
 
 mvn clean package -DskipTests
 or
-.\mvnw.cmd clean package -DskipTest
+.\mvnw.cmd clean package -DskipTests
 ```
 
 Build PaymentMS:
 
 ```bash
-cd ../etc-latam-payment-order
+cd ..
+cd payment-ms
 
 mvn clean package -DskipTests
 or
-.\mvnw.cmd clean package -DskipTest
+.\mvnw.cmd clean package -DskipTests
 ```
 
 These commands generate executable JAR files inside the `target` directory.
@@ -284,7 +239,8 @@ These commands generate executable JAR files inside the `target` directory.
 Build OrderMS image:
 
 ```bash
-cd ../etc-latam-order-payment
+cd ..
+cd order-ms
 
 docker build -t order-ms:latest .
 ```
@@ -292,7 +248,8 @@ docker build -t order-ms:latest .
 Build PaymentMS image:
 
 ```bash
-cd ../etc-latam-payment-order
+cd ..
+cd payment-ms
 
 docker build -t payment-ms:latest .
 ```
@@ -317,7 +274,7 @@ payment-ms
 Navigate to:
 
 ```bash
-cd ../etc-latam-order-payment
+cd ..
 ```
 
 Start all services:
@@ -384,6 +341,10 @@ https://documenter.getpostman.com/view/14557619/2sBXwqsAyt
 ```http
 POST http://localhost:8080/orders
 ```
+## Headers
+| Key        | Value             |
+|------------     |-------------------|
+| Content-Type    | application/json  |
 
 ## Request Body
 
@@ -487,7 +448,7 @@ Port: 5432
 Database: orderdb
 Username: postgres
 Password: postgres
-Role: postgres
+Rol: postgres
 ```
 
 Query example:
@@ -544,18 +505,6 @@ PostgreSQL was selected as the relational database due to its robustness and com
 8. Verify the final status is PAID or FAILED_PAYMENT.
 
 ---
-
-# Future Improvements
-
-* Flyway database migrations
-* Unit tests
-* Integration tests
-* Dead Letter Queue (DLQ)
-* Retry policies
-* OpenAPI / Swagger
-* Distributed tracing
-* Centralized logging
-* Observability with Prometheus and Grafana
 
 ---
 
